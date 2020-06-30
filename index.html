@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>WeatherNow</title>
+<script>
+
+function sendreceive(json){
+    var http = new XMLHttpRequest();
+    var url = '/weather/home';
+    http.open('POST', url, true);
+
+    http.setRequestHeader('Content-type', 'application/json');
+
+    http.onreadystatechange = function() {
+    if(http.readyState == 4 && http.status == 200) {
+        var response = JSON.parse(http.responseText);
+        console.log(response)
+        if(response.status=="200"){
+            delete response.status
+            // console.log(encodeURIComponent(JSON.stringify(response)))
+            window.location = "geocode.jsp?city="+json.city+"&lat="+response.lat+"&long="+response.long
+        } else{
+            alert("Wrong city name! Please enter again")
+        }
+    }
+    }
+    
+    http.send(JSON.stringify(json));
+}
+function getlatlong(){
+    var city=document.getElementById("city").value;
+    //console.log(city);
+    var json={city:city};
+    sendreceive(json);
+
+}
+</script>
+</head>
+<body bgcolor=white>
+
+<div>
+    <h3> Welcome to WeatherNow Application!</h3>
+    <p>You can easily get your weather for today. Just type in your city in the form given below and hit Enter. 
+    <a href="/weather/about.jsp">Click here</a> to know more about this Application</p>
+
+</div>
+
+<br/>
+<div>
+<div><h3>WeatherNow Form</h3></div>
+<p>Make sure you don't misspell the city name</p>
+<div>
+                <table>
+                    <tr>
+                        <td>Name of the city:</td>
+                        <td><input id="city" type="text" name="geolocation" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Go" onclick="getlatlong()" /></td>
+                    </tr>
+                </table>
+    
+</div>
+
+</div>
+</body>
+
+</html>
